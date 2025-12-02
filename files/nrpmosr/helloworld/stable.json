@@ -1,0 +1,20 @@
+{
+  "id": "helloworld",
+  "version": "stable",
+  "description": "Test Package",
+  "dependencies": {},
+  "scriptlets": {
+    "install": [
+      {
+        "type": "script.shell",
+        "content": "echo 'Called install scriptlet. Hello, World!'"
+      }
+    ],
+    "remove": [
+      {
+        "type": "script.shell",
+        "content": "echo 'Called remove scriptlet. Bye!'"
+      }
+    ]
+  }
+}
