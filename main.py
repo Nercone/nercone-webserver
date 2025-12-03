@@ -10,11 +10,41 @@ from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, PlainTextResponse, RedirectResponse
 from jinja2.exceptions import TemplateNotFound
+from bs4 import BeautifulSoup
 
 app = FastAPI()
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="html")
 log_filepath = Path(__file__).parent.joinpath("logs", f"{int(datetime.now(timezone.utc).timestamp())}.log")
 logger = ModernLogging("nercone-webserver", filepath=log_filepath)
+
+def list_articles():
+    base_dir = Path(__file__).parent / "html"
+    article_dir = base_dir / "blog" / "article"
+    articles = []
+    if not article_dir.exists():
+        return articles
+    html_files = sorted(article_dir.glob("*.html"))
+    for file_path in html_files:
+        try:
+            relative_path = file_path.relative_to(base_dir).as_posix()
+            template = templates.env.get_template(relative_path)
+            rendered_html = template.render()
+            soup = BeautifulSoup(rendered_html, "html.parser")
+            title_tag = soup.find("title")
+            title = title_tag.string.replace(" - Nercone Blog", "") if title_tag else "No Title"
+            meta_desc = soup.find("meta", attrs={"name": "description"})
+            description = meta_desc["content"] if meta_desc else ""
+            articles.append({
+                "title": title,
+                "description": description,
+                "filename": file_path.name,
+                "path": f"/blog/article/{file_path.name}"
+            })
+        except Exception as e:
+            print(f"Error parsing {file_path}: {e}")
+            continue
+    return articles
+templates.env.globals["list_articles"] = list_articles
 
 class AccessClientType(Enum):
     cURL = "cURL"
@@ -89,13 +119,13 @@ async def middleware(request: Request, call_next):
             f.write(f"----- EXCEPTION -----\n")
             f.write(str(exception))
             f.write("\n")
-    status_code_color = "blue"
+    status_code_color = "magenta"
     if str(response.status_code).startswith("1"):
-        status_code_color = "blue"
+        status_code_color = "cyan"
     elif str(response.status_code).startswith("2"):
         status_code_color = "green"
     elif str(response.status_code).startswith("3"):
-        status_code_color = "green"
+        status_code_color = "blue"
     elif str(response.status_code).startswith("4"):
         status_code_color = "yellow"
     elif str(response.status_code).startswith("5"):
@@ -103,7 +133,7 @@ async def middleware(request: Request, call_next):
     logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}")
     return response
 
-@app.get("/to/{url_id}")
+@app.get("/to/{url_id:path}")
 async def short_url(request: Request, url_id: str):
     json_path = Path(__file__).parent / "shorturls.json"
     if not json_path.exists():
@@ -113,7 +143,7 @@ async def short_url(request: Request, url_id: str):
             data = json.load(f)
     except Exception:
         return PlainTextResponse("Failed to load Short URL configuration.", status_code=500)
-    current_id = url_id.rstrip("/")
+    current_id = url_id.strip().rstrip("/")
     visited = set()
     for _ in range(10):
         if current_id in visited:
@@ -133,7 +163,7 @@ async def short_url(request: Request, url_id: str):
     return templates.TemplateResponse(
         status_code=404,
         request=request,
-        name="404.html"
+        name="to/404.html"
     )
 
 @app.get("/{full_path:path}")

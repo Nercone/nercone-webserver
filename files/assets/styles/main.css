@@ -1,29 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=M+PLUS+2:wght@100..900&display=swap');
-@font-face {
-    font-family: 'SF Pro';
-    font-style: normal;
-    font-weight: normal;
-    src: local('SF Pro'), url('/assets/fonts/sf-pro/SF-Pro.ttf') format('ttf');
-}
-@font-face {
-    font-family: 'SF Pro Display Bold';
-    font-style: normal;
-    font-weight: normal;
-    src: local('SF Pro Display Bold'), url('/assets/fonts/sf-pro/SF-Pro-Display-Bold.otf') format('otf');
-}
-@font-face {
-    font-family: 'SF Mono Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: local('SF Mono Regular'), url('/assets/fonts/sf-pro/SF-Mono-Regular.otf') format('otf');
-}
 html {
     color: oklch(0.601 0.020 256.0);
     background-color: oklch(0.982 0.002 256.0);
     line-height: 1;
     margin: 0;
-    font-family: "SF Pro", sans-serif;
+    font-family: "M PLUS 2", sans-serif;
     font-optical-sizing: auto;
+    font-weight: 400;
     font-style: normal;
 }
 body {
@@ -57,18 +41,20 @@ footer {
 }
 section {
     padding-top: 8px;
+    padding-bottom: 4px;
 }
 a {
     text-decoration: none;
     color: inherit;
 }
-h1, h2 {
-    color: oklch(0% 0 0);
-    font-family: "SF Pro Display Bold", sans-serif;
-    font-optical-sizing: auto;
+h1 {
+    font-weight: 700;
 }
-h3, h4, h5, h6 {
-    color: oklch(0.378 0.016 256.0);
+h2 {
+    font-weight: 500;
+}
+h1, h2, h3, h4, h5, h6 {
+    color: oklch(0% 0 0);
 }
 pre {
     background-color: oklch(0.959 0.004 256.0);
@@ -78,8 +64,9 @@ pre {
     overflow-x: auto;
     white-space: pre;
     line-height: 32px;
-    font-family: "SF Mono Regular", monospace;
+    font-family: "M PLUS 1 Code", sans-serif;
     font-optical-sizing: auto;
+    font-style: normal;
 }
 .flex {
     display: flex;
@@ -92,12 +79,20 @@ pre {
 .flex-1 {
     flex: 1;
 }
+.text-small {
+    font-size: small;
+}
 .text-bold {
-    font-family: "SF Pro Display Bold", sans-serif;
-    font-optical-sizing: auto;
+    font-weight: 700;
 }
 .text-highlight {
-    color: oklch(0.501 0.018 256.0);
+    color: oklch(75% 0 0);
+}
+.text-lowlight {
+    color: oklch(50% 0 0);
+}
+h1.text-lowlight, h2.text-lowlight, h3.text-lowlight, h4.text-lowlight, h5.text-lowlight, h6.text-lowlight {
+    color: oklch(50% 0 0);
 }
 .text-white {
     color: oklch(100% 0 0);
@@ -160,6 +155,12 @@ pre {
     }
     .text-highlight {
         color: oklch(85% 0 0);
+    }
+    .text-lowlight {
+        color: oklch(50% 0 0);
+    }
+    h1.text-lowlight, h2.text-lowlight, h3.text-lowlight, h4.text-lowlight, h5.text-lowlight, h6.text-lowlight {
+        color: oklch(80% 0 0);
     }
     .text-white {
         color: oklch(100% 0 0);
