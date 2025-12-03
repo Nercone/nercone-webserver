@@ -86,7 +86,7 @@ pre {
     font-weight: 700;
 }
 .text-highlight {
-    color: oklch(40% 0 0);
+    color: oklch(50% 0 0);
 }
 .text-lowlight {
     color: oklch(70% 0 0);
