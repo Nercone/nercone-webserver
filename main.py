@@ -38,7 +38,7 @@ def list_articles():
                 "title": title,
                 "description": description,
                 "filename": file_path.name,
-                "path": f"/blog/article/{file_path.name}"
+                "path": f"/blog/article/{file_path.name.replace('.html', '')}"
             })
         except Exception as e:
             print(f"Error parsing {file_path}: {e}")
