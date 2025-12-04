@@ -1,10 +1,9 @@
-# ╭───────────────────────────────────────────╮
-# │ _______                                   │
-# │ |     |                                   │
-# │ |     |  I'm a robot                      │
-# │ |_____|                     antiCAPTCHA   │
-# │                           Privacy | Terms │
-# ╰───────────────────────────────────────────╯
+# ╭──────────────────────────────────────────────╮
+# │ ╭──────╮                                     │
+# │ │      │  I'm a robot                        │
+# │ │      │                        antiCAPTCHA  │
+# │ ╰──────╯                    Privacy | Terms  │
+# ╰──────────────────────────────────────────────╯
 # Note: Inspired by https://fxtwitter.com/robots.txt
 #       If want to delete this, Please send deletion request to: nercone@diamondgotcat.net
 #       I delete this text if on received deletion request from FxEmbed.
