@@ -1,6 +1,7 @@
 import json
 import uuid
 import uvicorn
+import itertools  # この行を追加
 from enum import Enum
 from pathlib import Path
 from datetime import datetime, timezone
@@ -81,10 +82,14 @@ async def middleware(request: Request, call_next):
     if response.status_code >= 400 and subdomains:
         original_failed_response = response
         final_response_found = False
-        retry_strategies = [
-            "/".join(reversed(subdomains)),
-            "/".join(subdomains)
-        ]
+        reversed_path = "/".join(reversed(subdomains))
+        all_perms = itertools.permutations(subdomains)
+        retry_strategies = []
+        retry_strategies.append(reversed_path)
+        for perm in all_perms:
+            path_candidate = "/".join(perm)
+            if path_candidate not in retry_strategies:
+                retry_strategies.append(path_candidate)
         for sub_prefix in retry_strategies:
             new_path = f"/{sub_prefix}{original_path if original_path != '/' else ''}"
             response_status = None
