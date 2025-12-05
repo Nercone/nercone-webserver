@@ -3,7 +3,7 @@
 html {
     color: oklch(0.601 0.020 256.0);
     background-color: oklch(0.982 0.002 256.0);
-    line-height: 1;
+    line-height: 1.2;
     margin: 0;
     font-family: "SF Pro", "M PLUS 2", sans-serif;
     font-optical-sizing: auto;
@@ -64,6 +64,16 @@ pre {
     overflow-x: auto;
     white-space: pre;
     line-height: 32px;
+    font-family: "SF Mono", "M PLUS 1 Code", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}
+.code {
+    background-color: oklch(0.959 0.004 256.0);
+    font-size: smaller;
+    padding: 2px;
+    border-radius: 5px;
+    white-space: pre;
     font-family: "SF Mono", "M PLUS 1 Code", sans-serif;
     font-optical-sizing: auto;
     font-style: normal;
@@ -154,6 +164,9 @@ h1.text-lowlight, h2.text-lowlight, h3.text-lowlight, h4.text-lowlight, h5.text-
         color: #ffffff;
     }
     pre {
+        background-color: oklch(0.197 0.008 264.0);
+    }
+    .code {
         background-color: oklch(0.197 0.008 264.0);
     }
     .text-highlight {
