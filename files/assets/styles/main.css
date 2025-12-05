@@ -78,6 +78,11 @@ pre {
     font-optical-sizing: auto;
     font-style: normal;
 }
+.banner {
+    height: 50px;
+    width: auto;
+    border-radius: 6px;
+}
 .flex {
     display: flex;
     align-items: center;

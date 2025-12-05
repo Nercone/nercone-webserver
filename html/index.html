@@ -1,7 +1,6 @@
 {% extends "/base.html" %}
 {% block title %}Nercone (ネルコン){% endblock %}
 {% block description %}作りたいものを作り、やりたくないことからは逃げる学生{% endblock %}
-{% block extra_title %}{% endblock %}
 {% block content %}
             <h1 class="text-bold">Nercone</h1>
             <p>作りたいものを作り、やりたくないことからは逃げる学生</p>
@@ -36,11 +35,11 @@
             </section>
             <section id="banners">
                 <h2>Banners</h2>
-                <p>相互リンクとか尊敬する人とか<!--好きな人とか--></p>
+                <p>相互リンクとか尊敬する人とか<!--好きな人とか-->。相互リンクは募集中。</p>
                 <div id="banners-t3tra" style="margin-top: 24px;">
                     <h3 class="narrow-height">t3tra<!--様--></h3>
                     <p>技術とか才能が凄すぎる人<!--で僕が好きな人--></p>
-                    <a href="https://t3tra.dev/" target="_blank" rel="noopener noreferrer"><img src="https://t3tra.dev/images/banner.png" alt="banner-t3tra" height="50"></a>
+                    <a href="https://t3tra.dev/" target="_blank" rel="noopener noreferrer"><img src="https://t3tra.dev/images/banner.png" alt="banner-t3tra" class="banner"></a>
                     <!-- tip: Nerconeはてとらさんのことが好きすぎるためライバルは積極的に潰そうとします。 -->
                     <!-- tip of tip: ただし想像以上に強いライバルが現れると勝てないとわかり悲しくなって1日ぐらい現実世界からログアウトします。 -->
                     <!-- tip of tip of tip: なのでNerconeには優しくしてください -->
@@ -49,12 +48,11 @@
                 <div id="banners-nercone" style="margin-top: 24px;">
                     <h3>Nercone</h3>
                     <p>Nerconeのバナー画像は<a href="https://creativecommons.org/licenses/by/4.0/deed.ja" class="text-highlight">CC BY 4.0</a>の元で自由に使用できます。</p>
-                    <p>バナー貼って欲しいって人はSNSのDMとか何かで適当に連絡ください。多分貼る。(できればアスペクト比は16:5だと嬉しい。SVGでもOK)</p>
-                    <img src="/assets/images/nercone_banner.svg" alt="banner-nercone" height="50">
+                    <img src="/assets/images/nercone_banner.svg" alt="banner-nercone" class="banner">
                     <p class="text-bold text-highlight">ダウンロード</p>
                     <p><a href="/assets/images/nercone_banner.ai" class="text-highlight" download>.ai</a> <a href="/assets/images/nercone_banner.svg" class="text-highlight" download>.svg</a> <a href="/assets/images/nercone_banner.png" class="text-highlight" download>.png</a> <a href="/assets/images/nercone_banner.webp" class="text-highlight" download>.webp</a></p>
                     <p class="text-bold text-highlight">HTML</p>
-                    <pre>&lt;a href=&quot;https://diamondgotcat.net/&quot;&gt;&lt;img target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.svg&quot; alt=&quot;banner-nercone&quot; height=&quot;50&quot;&gt;&lt;/a&gt;  &lt;!-- SVG --&gt;<br>&lt;a href=&quot;https://diamondgotcat.net/&quot;&gt;&lt;img target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.png&quot; alt=&quot;banner-nercone&quot; height=&quot;50&quot;&gt;&lt;/a&gt;  &lt;!-- PNG --&gt;<br>&lt;a href=&quot;https://diamondgotcat.net/&quot;&gt;&lt;img target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot; src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.webp&quot; alt=&quot;banner-nercone&quot; height=&quot;50&quot;&gt;&lt;/a&gt; &lt;!-- WEBP --&gt;</pre>
+                    <pre>&lt;a href=&quot;https://diamondgotcat.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;&lt;img src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.svg&quot;&gt;&lt;/a&gt;  &lt;!-- SVG --&gt;<br>&lt;a href=&quot;https://diamondgotcat.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;&lt;img src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.png&quot;&gt;&lt;/a&gt;  &lt;!-- PNG --&gt;<br>&lt;a href=&quot;https://diamondgotcat.net/&quot; target=&quot;_blank&quot; rel=&quot;noopener noreferrer&quot;&gt;&lt;img src=&quot;https://diamondgotcat.net/assets/images/nercone_banner.webp&quot;&gt;&lt;/a&gt; &lt;!-- WEBP --&gt;</pre>
                 </div>
             </section>
 {% endblock %} 

@@ -47,6 +47,7 @@ def list_articles():
 templates.env.globals["list_articles"] = list_articles
 
 class AccessClientType(Enum):
+    FastGet = "FastGet"
     cURL = "cURL"
     Wget = "Wget"
     Firefox = "Firefox"
@@ -58,10 +59,12 @@ class AccessClientType(Enum):
 
 @app.middleware("http")
 async def middleware(request: Request, call_next):
-    access_id = "access-" + str(uuid.uuid4()).lower()
+    access_id = str(uuid.uuid4()).lower()
     user_agent = request.headers.get("user-agent", "")
     request.state.client_type = AccessClientType.Unknown
-    if "curl" in user_agent.lower():
+    if "fastget" in user_agent.lower():
+        request.state.client_type = AccessClientType.FastGet
+    elif "curl" in user_agent.lower():
         request.state.client_type = AccessClientType.cURL
     elif "wget" in user_agent.lower():
         request.state.client_type = AccessClientType.Wget
@@ -75,6 +78,7 @@ async def middleware(request: Request, call_next):
         request.state.client_type = AccessClientType.Chrome
     elif "safari" in user_agent.lower():
         request.state.client_type = AccessClientType.Safari
+    request.state.client_type = request.state.client_type.value
     proxy_route = []
     origin_client_host = request.client.host
     if "X-Forwarded-For" in request.headers:
@@ -91,49 +95,53 @@ async def middleware(request: Request, call_next):
     if not access_log_dir.exists():
         access_log_dir.mkdir(parents=True, exist_ok=True)
     with access_log_dir.joinpath(f"{access_id}.txt").open("w") as f:
-        f.write(f"----- RESPONSE -----\n")
-        f.write(f"CODE: {response.status_code}\n")
-        f.write(f"CHAR: {response.charset}\n")
-        f.write(f"MEDT: {response.media_type}\n")
-        f.write(f"----- REQUEST -----\n")
-        f.write(f"HOST: {request.client.host}\n")
-        f.write(f"PORT: {request.client.port}\n")
-        f.write(f"ORGN: {origin_client_host}\n")
-        f.write(f"TYPE: {request.state.client_type}\n")
-        f.write(f"URL : {request.url}\n")
-        f.write(f"----- ROUTE -----\n")
+        f.write("[REQUEST]\n")
+        f.write(f"REQUEST.METH: {request.method}\n")
+        f.write(f"REQUEST.HOST: {request.client.host}\n")
+        f.write(f"REQUEST.PORT: {request.client.port}\n")
+        f.write(f"REQUEST.ORGN: {origin_client_host}\n")
+        f.write(f"REQUEST.TYPE: {request.state.client_type}\n")
+        f.write(f"REQUEST.URL : {request.url}\n")
         for i in range(len(proxy_route)):
             if proxy_route[i] == origin_client_host:
-                f.write(f"[O] {proxy_route[i]}\n")
+                f.write(f"REQUEST.ROUT[{i}] O {proxy_route[i]}\n")
             elif proxy_route[i] == request.client.host:
-                f.write(f"[P] {proxy_route[i]}\n")
+                f.write(f"REQUEST.ROUT[{i}] P {proxy_route[i]}\n")
             else:
-                f.write(f"[M] {proxy_route[i]}\n")
-        f.write(f"----- HEADER -----\n")
+                f.write(f"REQUEST.ROUT[{i}] M {proxy_route[i]}\n")
         for key, value in request.headers.items():
-            f.write(f"{key}: {value}\n")
-        f.write(f"----- COOKIE -----\n")
+            f.write(f"REQUEST.HEAD[{key}]: {value}\n")
         for key, value in request.cookies.items():
-            f.write(f"{key}: {value}\n")
+            f.write(f"REQUEST.COOK[{key}]: {value}\n")
+        f.write("[RESPONSE]\n")
+        f.write(f"RESPONSE.CODE: {response.status_code}\n")
+        f.write(f"RESPONSE.CHAR: {response.charset}\n")
+        for key, value in response.headers.items():
+            f.write(f"RESPONSE.HEAD[{key}]: {value}\n")
         if exception:
-            f.write(f"----- EXCEPTION -----\n")
+            f.write("[EXCEPTION]\n")
             f.write(str(exception))
-            f.write("\n")
+    log_level = "INFO"
     status_code_color = "magenta"
     if str(response.status_code).startswith("1"):
+        log_level = "INFO"
         status_code_color = "cyan"
     elif str(response.status_code).startswith("2"):
+        log_level = "INFO"
         status_code_color = "green"
     elif str(response.status_code).startswith("3"):
+        log_level = "INFO"
         status_code_color = "blue"
     elif str(response.status_code).startswith("4"):
+        log_level = "WARNING"
         status_code_color = "yellow"
     elif str(response.status_code).startswith("5"):
+        log_level = "ERROR"
         status_code_color = "red"
-    logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}")
+    logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url} ({request.state.client_type}){ModernColor.color('reset')}", level_text=log_level)
     return response
 
-@app.get("/to/{url_id:path}")
+@app.api_route("/to/{url_id:path}", methods=["GET", "POST", "HEAD"])
 async def short_url(request: Request, url_id: str):
     json_path = Path(__file__).parent / "shorturls.json"
     if not json_path.exists():
@@ -166,7 +174,7 @@ async def short_url(request: Request, url_id: str):
         name="to/404.html"
     )
 
-@app.get("/{full_path:path}")
+@app.api_route("/{full_path:path}", methods=["GET", "POST", "HEAD"])
 async def default_response(request: Request, full_path: str) -> Response:
     if not full_path.endswith(".html"):
         base_dir = Path(__file__).parent / "files"
