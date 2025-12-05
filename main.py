@@ -1,9 +1,9 @@
 import json
 import uuid
 import uvicorn
-import itertools
 from enum import Enum
 from pathlib import Path
+from itertools import permutations
 from datetime import datetime, timezone
 from nercone_modern.color import ModernColor
 from nercone_modern.logging import ModernLogging
@@ -67,7 +67,6 @@ async def middleware(request: Request, call_next):
         return {"type": "http.request", "body": request_body}
     original_scope = request.scope.copy()
     original_path = original_scope['path']
-    response = await call_next(request)
     host = request.headers.get("host", "").split(":")[0]
     host_parts = host.split('.')
     subdomains = []
@@ -79,15 +78,11 @@ async def middleware(request: Request, call_next):
         s_parts = host_parts[:-2]
         if s_parts and s_parts != ['www']:
             subdomains = s_parts
-    if response.status_code >= 400 and subdomains:
-        original_failed_response = response
-        final_response_found = False
-        reversed_path = "/".join(reversed(subdomains))
-        all_perms = itertools.permutations(subdomains)
-        retry_strategies = []
-        retry_strategies.append(reversed_path)
-        for perm in all_perms:
-            path_candidate = "/".join(perm)
+    response = None
+    if subdomains:
+        retry_strategies = ["/".join(reversed(subdomains))]
+        for p in permutations(subdomains):
+            path_candidate = "/".join(p)
             if path_candidate not in retry_strategies:
                 retry_strategies.append(path_candidate)
         for sub_prefix in retry_strategies:
@@ -123,12 +118,13 @@ async def middleware(request: Request, call_next):
                     status_code=response_status,
                     headers=decoded_headers
                 )
-                final_response_found = True
                 request.scope['path'] = new_path
                 break
-        if not final_response_found:
-            response = original_failed_response
+        if response is None:
             request.scope['path'] = original_path
+            response = await call_next(request)
+    else:
+        response = await call_next(request)
     access_id = str(uuid.uuid4()).lower()
     user_agent = request.headers.get("user-agent", "")
     request.state.client_type = AccessClientType.Unknown
