@@ -18,6 +18,7 @@ app = FastAPI()
 templates = Jinja2Templates(directory="html")
 log_filepath = Path(__file__).parent.joinpath("logs", "main.log")
 logger = ModernLogging("nercone-webserver", filepath=log_filepath)
+log_exclude_paths = ["status"]
 
 def list_articles():
     base_dir = Path(__file__).parent / "html"
@@ -200,7 +201,8 @@ async def middleware(request: Request, call_next):
     elif str(response.status_code).startswith("5"):
         log_level = "ERROR"
         status_code_color = "red"
-    logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}", level_text=log_level)
+    if not request.scope['path'].strip("/") in log_exclude_paths:
+        logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}", level_text=log_level)
     return response
 
 @app.api_route("/status", methods=["GET"])
