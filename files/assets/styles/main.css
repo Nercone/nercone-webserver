@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+2:wght@100..900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=M+PLUS+1+Code:wght@100..700&family=M+PLUS+2:wght@100..900&display=swap');
 html {
-    color: oklch(0.601 0.020 256.0);
+    color: oklch(55% 0 0);
     background-color: oklch(0.982 0.002 256.0);
     line-height: 1.2;
     margin: 0;
@@ -17,7 +17,7 @@ body {
     flex-direction: column;
 }
 header {
-    background-color: oklch(0.601 0.020 256.0);
+    background-color: oklch(40% 0 0);
     position: fixed;
     top: 0;
     left: 0;
@@ -107,10 +107,10 @@ pre {
     text-decoration: underline;
 }
 .text-highlight {
-    color: oklch(50% 0 0);
+    color: oklch(35% 0 0);
 }
 .text-lowlight {
-    color: oklch(70% 0 0);
+    color: oklch(65% 0 0);
 }
 h1.text-lowlight, h2.text-lowlight, h3.text-lowlight, h4.text-lowlight, h5.text-lowlight, h6.text-lowlight {
     color: oklch(40% 0 0);
