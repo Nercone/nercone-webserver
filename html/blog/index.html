@@ -10,7 +10,7 @@
             <h2 class="text-bold">Nercone Blog</h1>
             <p style="padding-bottom: 16px;">Nercone(ネルコン)の気まぐれな技術ブログ</p>
             {% for article in list_articles() %}
-            <a href="{{ article.path }}">
+            <a href="{{ article.path }}" class="text-no-decoration">
                 <div class="article-card">
                     <h3>{{ article.title }}</h3>
                     <p>{{ article.description }}</p>
