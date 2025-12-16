@@ -6,3 +6,8 @@ logs/access/*.txt
 .DS_Store
 */.DS_Store
 **/.DS_Store
+
+# Python's Cache
+__pycache__
+*/__pycache__
+**/__pycache__

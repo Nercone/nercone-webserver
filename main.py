@@ -9,6 +9,7 @@ import multiprocessing
 from enum import Enum
 from pathlib import Path
 from itertools import permutations
+from functools import lru_cache
 from datetime import datetime, timezone
 from nercone_modern.color import ModernColor
 from nercone_modern.logging import ModernLogging
@@ -21,7 +22,7 @@ from bs4 import BeautifulSoup
 app = FastAPI()
 templates = Jinja2Templates(directory="html")
 log_filepath = Path(__file__).parent.joinpath("logs", "main.log")
-logger = ModernLogging("nercone-webserver", filepath=log_filepath)
+logger = ModernLogging("nercone-webserver", filepath=str(log_filepath))
 log_exclude_paths = ["status"]
 block_messages = [
     "Nice try, but this system is a bit ahead of that.",
@@ -38,6 +39,19 @@ block_messages = [
 def strip_ip_chars(s: str) -> str:
     return re.sub(r'[^0-9A-Fa-f:.]', '', s)
 
+@lru_cache(maxsize=128)
+def whois(address: str) -> str | None:
+    whois_proc = subprocess.Popen([shutil.which("whois"), strip_ip_chars(str(address))], encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.STDOUT) # type: ignore
+    whois_output = ""
+    for line in whois_proc.stdout: # type: ignore
+        if line.strip() != "":
+            whois_output += line
+    whois_proc.wait()
+    if whois_proc.returncode == 0:
+        return whois_output
+    else:
+        return None
+
 def list_articles():
     base_dir = Path(__file__).parent / "html"
     article_dir = base_dir / "blog" / "article"
@@ -52,7 +66,7 @@ def list_articles():
             rendered_html = template.render()
             soup = BeautifulSoup(rendered_html, "html.parser")
             title_tag = soup.find("title")
-            title = title_tag.string.replace(" - Nercone Blog", "") if title_tag else "No Title"
+            title = str(title_tag.string).replace(" - Nercone Blog", "") if title_tag else "No Title"
             meta_desc = soup.find("meta", attrs={"name": "description"})
             description = meta_desc["content"] if meta_desc else ""
             articles.append({
@@ -85,7 +99,7 @@ async def middleware(request: Request, call_next):
     request_body = await request.body()
     async def receive():
         return {"type": "http.request", "body": request_body}
-    original_scope = request.scope.copy()
+    original_scope = request.scope.copy() # type: ignore
     original_path = original_scope['path']
     host = request.headers.get("host", "").split(":")[0]
     host_parts = host.split('.')
@@ -166,9 +180,9 @@ async def middleware(request: Request, call_next):
         request.state.client_type = AccessClientType.Safari
     request.state.client_type = request.state.client_type.value
     proxy_route = []
-    origin_client_host = request.client.host
+    origin_client_host = request.client.host # type: ignore
     if "X-Forwarded-For" in request.headers:
-        proxy_route = request.headers.get("X-Forwarded-For").split(",")
+        proxy_route = request.headers.get("X-Forwarded-For", "").split(",")
         origin_client_host = proxy_route[0]
     exception: Exception | None = None
     response.headers["Server"] = "Nercone Web Server"
@@ -178,33 +192,28 @@ async def middleware(request: Request, call_next):
     with access_log_dir.joinpath(f"{access_id}.txt").open("w") as f:
         f.write("[REQUEST]\n")
         f.write(f"REQUEST.METH: {request.method}\n")
-        f.write(f"REQUEST.HOST: {request.client.host}\n")
-        f.write(f"REQUEST.PORT: {request.client.port}\n")
+        f.write(f"REQUEST.HOST: {request.client.host}\n") # type: ignore
+        f.write(f"REQUEST.PORT: {request.client.port}\n") # type: ignore
         f.write(f"REQUEST.ORGN: {origin_client_host}\n")
         f.write(f"REQUEST.TYPE: {request.state.client_type}\n")
         f.write(f"REQUEST.URL : {request.url}\n")
         for i in range(len(proxy_route)):
             if proxy_route[i] == origin_client_host:
-                f.write(f"REQUEST.ROUT[{i}] O {proxy_route[i].strip()}\n")
-            elif proxy_route[i] == request.client.host:
-                f.write(f"REQUEST.ROUT[{i}] P {proxy_route[i].strip()}\n")
+                f.write(f"REQUEST.ROUT[{i}]: {proxy_route[i].strip()} (O)\n")
+            elif proxy_route[i] == request.client.host: # type: ignore
+                f.write(f"REQUEST.ROUT[{i}]: {proxy_route[i].strip()} (P)\n")
             else:
-                f.write(f"REQUEST.ROUT[{i}] M {proxy_route[i].strip()}\n")
+                f.write(f"REQUEST.ROUT[{i}]: {proxy_route[i].strip()} (M)\n")
         for key, value in request.headers.items():
             f.write(f"REQUEST.HEAD[{key}]: {value}\n")
         for key, value in request.cookies.items():
             f.write(f"REQUEST.COOK[{key}]: {value}\n")
         f.write("\n")
         try:
-            whois_proc = subprocess.Popen([shutil.which("whois"), strip_ip_chars(str(origin_client_host))], encoding="utf-8", stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-            whois_output = ""
-            for line in whois_proc.stdout:
-                if line.strip() != "":
-                    whois_output += line
-            whois_proc.wait()
-            if whois_proc.returncode == 0:
+            whois_result = whois(origin_client_host)
+            if whois_result is not None:
                 f.write("[WHOIS]\n")
-                f.write(whois_output)
+                f.write(whois_result)
                 f.write("\n")
         except:
             pass
@@ -235,7 +244,7 @@ async def middleware(request: Request, call_next):
         log_level = "ERROR"
         status_code_color = "red"
     if not request.scope['path'].strip("/") in log_exclude_paths:
-        logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}", level_text=log_level)
+        logger.log(f"{ModernColor.color(status_code_color)}{response.status_code}{ModernColor.color('reset')} {access_id} {request.client.host} {ModernColor.color('gray')}{request.url}{ModernColor.color('reset')}", level_text=log_level) # type: ignore
     return response
 
 @app.api_route("/status", methods=["GET"])
