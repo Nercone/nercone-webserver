@@ -14,6 +14,21 @@ Content-signal: search=yes,ai-train=no,ai-input=no
 Allow: /
 License: https://diamondgotcat.net/license.xml
 
+User-Agent: BingBot
+Disallow: /
+
+User-Agent: AdIdxBot
+Disallow: /
+
+User-Agent: BingPreview
+Disallow: /
+
+User-Agent: MicrosoftPreview
+Disallow: /
+
+User-Agent: BingVideoPreview
+Disallow: /
+
 # ╭──────────────────────────────────────────────╮
 # │ Thanks for reading and following robots.txt. │
 # │ Have a nice day!                             │
