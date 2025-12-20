@@ -207,6 +207,9 @@ async def middleware(request: Request, call_next):
             origin_client_host = proxy_route[0]
         exception: Exception | None = None
         response.headers["Server"] = "Nercone Web Server"
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
         response_body = b""
         if not isinstance(response, (FileResponse, RedirectResponse)):
             if hasattr(response, "body_iterator"):
