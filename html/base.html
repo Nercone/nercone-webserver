@@ -89,6 +89,7 @@
                 flex-direction: column;
             }
             header {
+                view-transition-name: none;
                 background-color: oklch(100% 0 0 / 75%);
                 backdrop-filter: blur(5px);
                 position: fixed;
@@ -99,19 +100,24 @@
                 display: flex;
                 align-items: center;
                 gap: 16px;
+                position: fixed;
+                z-index: 10;
             }
             main {
+                view-transition-name: main-content;
                 padding: 24px;
                 padding-top: 60px;
                 padding-bottom: 0px;
                 flex: 1;
             }
             footer {
+                view-transition-name: none;
                 padding: 24px;
                 padding-top: 0px;
                 display: flex;
                 align-items: center;
                 gap: 16px;
+                z-index: 10;
             }
             section {
                 padding-top: 4px;
@@ -309,13 +315,84 @@
                     color: oklch(0.6 0.2 290.0);
                 }
             }
+            @keyframes vt-fade-out {
+                from { opacity: 1; }
+                to   { opacity: 0; }
+            }
+            @keyframes vt-fade-in {
+                from { opacity: 0; }
+                to   { opacity: 1; }
+            }
+            @keyframes vt-blur-out {
+                from { filter: blur(0px); }
+                to   { filter: blur(6px); }
+            }
+            @keyframes vt-blur-in {
+                from { filter: blur(6px); }
+                to   { filter: blur(0px); }
+            }
+            @media (prefers-reduced-motion: reduce) {
+                ::view-transition-old(main-content),
+                ::view-transition-new(main-content) {
+                    z-index: 1;
+                    pointer-events: none;
+                }
+            }
         </style>
+        <script>
+            (() => {
+                if (!document.startViewTransition) return;
+
+                document.addEventListener("click", (event) => {
+                    const link = event.target.closest("a");
+                    if (!link) return;
+
+                    const url = new URL(link.href, location.href);
+
+                    if (url.origin !== location.origin) return;
+                    if (link.target || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+
+                    event.preventDefault();
+
+                    document.startViewTransition(async () => {
+                        const response = await fetch(url.href, {
+                            headers: { "X-Requested-With": "view-transition" }
+                        });
+
+                        const html = await response.text();
+                        const doc = new DOMParser().parseFromString(html, "text/html");
+
+                        const newMain = doc.querySelector("main");
+                        const currentMain = document.querySelector("main");
+
+                        if (!newMain || !currentMain) {
+                            location.href = url.href;
+                            return;
+                        }
+
+                        currentMain.innerHTML = newMain.innerHTML;
+                        document.title = doc.title;
+
+                        const newDescription = doc.querySelector('meta[name="description"]');
+                        const currentDescription = document.querySelector('meta[name="description"]');
+
+                        if (newDescription && currentDescription) {
+                            currentDescription.setAttribute("content", newDescription.getAttribute("content"));
+                        }
+                        history.pushState(null, "", url.href);
+                    });
+                });
+                window.addEventListener("popstate", () => {
+                    location.reload();
+                });
+            })();
+        </script>
         {% block extra_head %}{% endblock %}
     </head>
     <body>
         <header class="flex text-highlight">
             <div class="flex-1 flex">
-                <p><a href="https://diamondgotcat.net/" class="text-bold text-no-decoration">Nercone</a> <a href="{% block base_url %}/{% endblock %}" class="text-no-decoration">{% block extra_title %}Home{% endblock %}</a></p>
+                <p><a href="{% block base_url %}/{% endblock %}" class="text-no-decoration"><span class="text-bold">Nercone</span> {% block extra_title %}Home{% endblock %}</a></p>
             </div>
             <div class="flex">
                 <a href="https://github.com/DiamondGotCat/" target="_blank" rel="noopener noreferrer" class="text-no-decoration">GitHub</a>
