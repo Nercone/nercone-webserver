@@ -2,31 +2,13 @@
 {% block title %}Nercone Blog{% endblock %}
 {% block description %}Nercone(ネルコン)の気まぐれな技術ブログ{% endblock %}
 {% block extra_title %}Blog{% endblock %}
-{% block extra_head %}
-        <style>
-            .article-card {
-                border: solid;
-                border-width: 1px;
-                border-color: oklch(75% 0 0);
-                border-radius: 8px;
-                padding: 8px;
-                padding-left: 28px;
-                padding-bottom: 16px;
-            }
-            @media (prefers-color-scheme: dark) {
-                .article-card {
-                    border-color: oklch(25% 0 0);
-                }
-            }
-        </style>
-{% endblock %}
 {% block base_url %}https://diamondgotcat.net/blog/{% endblock %}
 {% block content %}
             <h2 class="text-bold">Nercone Blog</h1>
             <p style="padding-bottom: 16px;">Nercone(ネルコン)の気まぐれな技術ブログ</p>
             {% for article in list_articles() %}
             <a href="{{ article.path }}" class="text-no-decoration">
-                <div class="article-card">
+                <div class="block">
                     <h3>{{ article.title }}</h3>
                     <p>{{ article.description }}</p>
                 </div>
