@@ -7,7 +7,7 @@
             <p class="text-small text-bold"><a href="/" class="text-no-decoration">← ホーム</a></p>
             {% for article in list_articles() %}
             <a href="{{ article.path }}" class="text-no-decoration">
-                <div class="block">
+                <div class="block" style="margin-bottom: 16px;">
                     <h3>{{ article.title }}</h3>
                     <p>{{ article.description }}</p>
                 </div>
