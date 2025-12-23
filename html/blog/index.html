@@ -2,9 +2,8 @@
 {% block title %}Nercone Blog{% endblock %}
 {% block description %}Nercone(ネルコン)の気まぐれな技術ブログ{% endblock %}
 {% block extra_title %}Blog{% endblock %}
+{% block header_desc %}気まぐれな技術ブログ{% endblock %}
 {% block content %}
-            <h2 class="text-bold">Nercone Blog</h1>
-            <p style="padding-bottom: 16px;">Nercone(ネルコン)の気まぐれな技術ブログ</p>
             {% for article in list_articles() %}
             <a href="{{ article.path }}" class="text-no-decoration">
                 <div class="block">
