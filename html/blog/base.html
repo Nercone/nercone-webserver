@@ -5,7 +5,5 @@
 {% block header_desc %}{{ self.blog_title() }}{% endblock %}
 {% block content %}
             <p class="text-small text-bold"><a href="/blog/" class="text-no-decoration">← 記事一覧</a></p>
-            <h2 class="text-bold">{{ self.blog_title() }}</h2>
-            <p style="padding-bottom: 8px;">{{ self.blog_description() }}</p>
             {% block blog_content %}<p>No contents.</p>{% endblock %}
 {% endblock %}
