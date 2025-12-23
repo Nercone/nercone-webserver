@@ -4,6 +4,7 @@ import uuid
 import shutil
 import random
 import subprocess
+import sqlite3
 import uvicorn
 import multiprocessing
 from enum import Enum
@@ -59,6 +60,41 @@ def whois(address: str) -> str | None:
         return whois_output
     else:
         return None
+
+def get_counter() -> int:
+    conn = sqlite3.connect("main.db")
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT value FROM access_counter WHERE rowid = 1")
+        row = cur.fetchone()
+        if row is None:
+            conn.execute("""
+            CREATE TABLE IF NOT EXISTS access_counter (
+                value INTEGER NOT NULL
+            )
+            """)
+            conn.execute("INSERT OR IGNORE INTO access_counter (rowid, value) VALUES (1, 0)")
+            conn.commit()
+            return 0
+        return row[0]
+    finally:
+        conn.close()
+templates.env.globals["get_counter"] = get_counter
+
+def increment_counter():
+    conn = sqlite3.connect("main.db")
+    try:
+        cur = conn.cursor()
+        conn.execute("BEGIN IMMEDIATE")
+        cur.execute(
+            "UPDATE access_counter SET value = value + 1 WHERE rowid = 1"
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
 
 def todays_phrase():
     today = datetime.now(timezone.utc).date()
@@ -309,9 +345,9 @@ async def middleware(request: Request, call_next):
         logger.log("Fatal exception in middleware!!!", level_text="ERROR")
         raise
 
-@app.api_route("/status", methods=["GET"])
+@app.api_route("/api/v1/status", methods=["GET"])
 async def short_url(request: Request):
-    return JSONResponse({"status": "ok"}, status_code=200)
+    return JSONResponse({"status": "ok", "access_count": get_counter()}, status_code=200)
 
 @app.api_route("/to/{url_id:path}", methods=["GET", "POST", "HEAD"])
 async def short_url(request: Request, url_id: str):
@@ -373,11 +409,13 @@ async def default_response(request: Request, full_path: str) -> Response:
         templates_to_try.append(f"{clean_path}/index.html")
     for template_name in templates_to_try:
         try:
-            return templates.TemplateResponse(
+            response = templates.TemplateResponse(
                 status_code=200,
                 request=request,
                 name=template_name
             )
+            increment_counter()
+            return response
         except TemplateNotFound:
             continue
     return templates.TemplateResponse(
