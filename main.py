@@ -11,6 +11,7 @@ from enum import Enum
 from pathlib import Path
 from itertools import permutations
 from functools import lru_cache
+from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
 from nercone_modern.color import ModernColor
 from nercone_modern.logging import ModernLogging
@@ -119,6 +120,10 @@ def increment_counter():
             raise
         finally:
             conn.close()
+
+def current_year():
+    return str(datetime.now(ZoneInfo("Asia/Tokyo")).year)
+templates.env.globals["current_year"] = current_year
 
 def todays_phrase():
     today = datetime.now(timezone.utc).date()
