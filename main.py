@@ -404,7 +404,7 @@ async def middleware(request: Request, call_next):
         raise
 
 @app.api_route("/api/v1/status", methods=["GET"])
-async def short_url(request: Request):
+async def v1_status(request: Request):
     return JSONResponse({"status": "ok", "access_count": get_counter()}, status_code=200)
 
 @app.api_route("/to/{url_id:path}", methods=["GET", "POST", "HEAD"])
