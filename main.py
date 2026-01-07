@@ -22,7 +22,7 @@ from jinja2.exceptions import TemplateNotFound
 from bs4 import BeautifulSoup
 
 app = FastAPI()
-templates = Jinja2Templates(directory="html")
+templates = Jinja2Templates(directory="templates")
 log_filepath = Path(__file__).parent.joinpath("logs", "main.log")
 logger = ModernLogging("nercone-webserver", filepath=str(log_filepath))
 log_exclude_paths = ["status"]
@@ -132,7 +132,7 @@ def todays_phrase():
 templates.env.globals["todays_phrase"] = todays_phrase
 
 def list_articles():
-    base_dir = Path(__file__).parent / "html"
+    base_dir = Path(__file__).parent / "templates"
     article_dir = base_dir / "blog" / "article"
     articles = []
     if not article_dir.exists():
@@ -161,7 +161,7 @@ def list_articles():
 templates.env.globals["list_articles"] = list_articles
 
 def list_credit_pages():
-    base_dir = Path(__file__).parent / "html"
+    base_dir = Path(__file__).parent / "templates"
     credit_dir = base_dir / "credit"
     pages = []
     if not credit_dir.exists():
@@ -453,7 +453,7 @@ async def default_response(request: Request, full_path: str) -> Response:
     if "cms" in full_path:
         return PlainTextResponse("CMSなんて使ってないよ。", status_code=404)
     if not full_path.endswith(".html"):
-        base_dir = Path(__file__).parent / "files"
+        base_dir = Path(__file__).parent / "static"
         safe_full_path = full_path.lstrip('/')
         target_path = (base_dir / safe_full_path).resolve()
         if not str(target_path).startswith(str(base_dir.resolve())):
