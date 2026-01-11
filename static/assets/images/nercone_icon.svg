@@ -5,14 +5,13 @@
       .cls-1 {
         fill: none;
         stroke: #a8a8a8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-        stroke-width: 48px;
+        stroke-miterlimit: 10;
+        stroke-width: 30px;
       }
     </style>
   </defs>
   <line class="cls-1" y1="384"/>
-  <line class="cls-1" x2="384"/>
+  <line class="cls-1" x1="-15" x2="384"/>
   <line class="cls-1" x2="384" y2="384"/>
   <polyline class="cls-1" points="480 0 288 192 480 384"/>
 </svg>
