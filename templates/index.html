@@ -4,9 +4,13 @@
 {% block extra_head %}
         <style>
             .aaaa {
-                min-height: 100%;
-                display: grid;
-                place-items: center;
+                display: flex;
+                flex-direction: column;
+            }
+            .aaaa::before,
+            .aaaa::after {
+                content: "";
+                flex: 1;
             }
             .big-text {
                 margin: 0;
