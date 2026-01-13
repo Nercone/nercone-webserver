@@ -3,9 +3,10 @@
 {% block description %}作りたいものを作り、やりたくないことからは逃げる学生{% endblock %}
 {% block extra_head %}
         <style>
-            main {
+            .aaaa {
+                min-height: 100%;
                 display: grid;
-                grid-template-rows: auto 1fr auto;
+                place-items: center;
             }
             .big-text {
                 margin: 0;
@@ -17,5 +18,7 @@
         </style>
 {% endblock %}
 {% block content %}
-            <p class="text-highlight big-text">NERCONE</p>
+            <div class="aaaa">
+                <p class="text-highlight big-text">NERCONE</p>
+            </div>
 {% endblock %}
