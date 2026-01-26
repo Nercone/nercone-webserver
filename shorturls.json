@@ -1,11 +1,14 @@
 {
-  "home": {"type": "redirect", "content": "https://www.diamondgotcat.net/"},
+  "email": {"type": "redirect", "content": "mailto:nercone@diamondgotcat.net"},
   "github": {"type": "redirect", "content": "https://github.com/DiamondGotCat/"},
-  "ypsh": {"type": "redirect", "content": "https://ypsh.diamondgotcat.net/"},
-  "ypsh-dl": {"type": "redirect", "content": "https://ypsh.diamondgotcat.net/download/"},
-  "ypsh-docs": {"type": "redirect", "content": "https://ypsh.diamondgotcat.net/docs/"},
-  "x": {"type": "redirect", "content": "https://x.com/DiamondGotCat/"},
-  "twitter": {"type": "alias", "content": "x"},
-  "never-gonna-give-you-up":{ "type": "redirect", "content": "https://youtu.be/dQw4w9WgXcQ?si=MTA8bPNsSyrYypED"},
-  "special-link": {"type": "alias", "content": "never-gonna-give-you-up"}
+  "twitter": {"type": "redirect", "content": "https://twitter.com/DiamondGotCat/"},
+  "public-key": {"type": "redirect", "content": "https://diamondgotcat.net/pgp-pubkey/"},
+  "pgp": {"type": "alias", "content": "public-key"},
+  "pgp-pubkey": {"type": "alias", "content": "public-key"},
+  "openpgp": {"type": "alias", "content": "public-key"},
+  "openpgp-pubkey": {"type": "alias", "content": "public-key"},
+  "gpg": {"type": "alias", "content": "public-key"},
+  "gpg-pubkey": {"type": "alias", "content": "public-key"},
+  "gnupg": {"type": "alias", "content": "public-key"},
+  "gnupg-pubkey": {"type": "alias", "content": "public-key"}
 }
