@@ -2,7 +2,7 @@
   "email": {"type": "redirect", "content": "mailto:nercone@diamondgotcat.net"},
   "github": {"type": "redirect", "content": "https://github.com/DiamondGotCat/"},
   "twitter": {"type": "redirect", "content": "https://twitter.com/DiamondGotCat/"},
-  "public-key": {"type": "redirect", "content": "https://diamondgotcat.net/pgp-pubkey/"},
+  "public-key": {"type": "redirect", "content": "https://diamondgotcat.net/public-key/"},
   "pgp": {"type": "alias", "content": "public-key"},
   "pgp-pubkey": {"type": "alias", "content": "public-key"},
   "openpgp": {"type": "alias", "content": "public-key"},
