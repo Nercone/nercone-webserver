@@ -448,6 +448,7 @@ async def v1_status(request: Request):
                     "swap": {
                         "total": swap_memory.total,
                         "used": swap_memory.used,
+                        "available": swap_memory.total - swap_memory.used,
                         "percent": swap_memory.percent
                     }
                 },
