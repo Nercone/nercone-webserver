@@ -5,14 +5,21 @@
       .cls-1 {
         fill: #fff;
       }
+
+      .cls-2 {
+        fill: #202020;
+      }
     </style>
   </defs>
-  <rect class="cls-1" x="88" y="232" width="64" height="256"/>
-  <rect class="cls-1" x="280" y="328" width="64" height="160"/>
-  <rect class="cls-1" x="184" y="232" width="64" height="160"/>
-  <rect class="cls-1" x="376" y="232" width="64" height="256"/>
-  <rect class="cls-1" x="472" y="232" width="64" height="256"/>
-  <rect class="cls-1" x="568" y="232" width="64" height="64"/>
-  <rect class="cls-1" x="568" y="328" width="64" height="64"/>
-  <rect class="cls-1" x="568" y="424" width="64" height="64"/>
+  <rect class="cls-2" width="720" height="720" rx="160" ry="160"/>
+  <g>
+    <rect class="cls-1" x="156" y="264" width="48" height="192"/>
+    <rect class="cls-1" x="300" y="336" width="48" height="120"/>
+    <rect class="cls-1" x="228" y="264" width="48" height="120"/>
+    <rect class="cls-1" x="372" y="264" width="48" height="192"/>
+    <rect class="cls-1" x="444" y="264" width="48" height="192"/>
+    <rect class="cls-1" x="516" y="264" width="48" height="48"/>
+    <rect class="cls-1" x="516" y="336" width="48" height="48"/>
+    <rect class="cls-1" x="516" y="408" width="48" height="48"/>
+  </g>
 </svg>
