@@ -1,5 +1,8 @@
 import sqlite3
-conn = sqlite3.connect("main.db")
+from pathlib import Path
+
+filepath = Path.cwd().joinpath("databases", "access_counter.db")
+conn = sqlite3.connect()
 conn.execute("""
 CREATE TABLE IF NOT EXISTS access_counter (
     value INTEGER NOT NULL

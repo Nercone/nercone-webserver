@@ -6,7 +6,7 @@ After=network.target
 User=root
 Group=root
 WorkingDirectory=/srv/nercone-webserver
-ExecStart=/usr/bin/sh /srv/nercone-webserver/start.sh
+ExecStart=/usr/bin/bash /srv/nercone-webserver/start.sh
 Restart=always
 RestartSec=3
 

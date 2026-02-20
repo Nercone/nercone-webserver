@@ -1,5 +1,5 @@
 [Unit]
-Description=Nercone Web Server Auto-updater
+Description=Nercone Web Server Updator
 
 [Timer]
 OnCalendar=*-*-* 00:00:00 UTC

@@ -12,7 +12,6 @@
 User-Agent: *
 Content-signal: search=yes,ai-train=no,ai-input=no
 Allow: /
-License: https://diamondgotcat.net/license.xml
 
 User-Agent: BingBot
 Disallow: /

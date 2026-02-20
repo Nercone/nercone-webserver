@@ -1,9 +1,10 @@
 # Database files
-main.db
+databases/*.db
 
 # Log files
 logs/*.log
-logs/access/*.txt
+logs/**/*.log
+logs/**/*.txt
 
 # macOS
 .DS_Store

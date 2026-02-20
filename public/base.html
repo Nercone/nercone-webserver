@@ -338,10 +338,10 @@
         <header class="flex">
             <div class="flex-1 flex">
                 <a href="/" class="text-no-decoration text-highlight" style="gap: 8px;"><span class="text-bold">Nercone</span> {% block extra_title %}<span class="text-bold">(ネルコン)</span>{% endblock %}</a>
-                <p class="hide show-on-medium">{% block header_desc %}{{ todays_phrase() }}{% endblock %}</p>
+                <p class="hide show-on-medium">{% block header_desc %}{{ get_daily_quote() }}{% endblock %}</p>
             </div>
             <div class="flex">
-                <a href="/access-counter/" class="text-no-decoration text-highlight">#{{ get_counter() }}</a>
+                <a href="/access-counter/" class="text-no-decoration text-highlight">#{{ get_access_count() }}</a>
             </div>
         </header>
         <main>{% block content %}{% endblock %}        </main>
@@ -349,10 +349,8 @@
             <div class="flex-1 flex">
                 <a href="/" class="text-no-decoration"><span class="text-bold">nercone</span>.dev</a>
                 <a href="/about/" class="text-no-decoration hide show-on-large">about</a>
-                <a href="/blog/" class="text-no-decoration hide show-on-large">blog</a>
-                <a href="/projects/" class="text-no-decoration hide show-on-large">projects</a>
                 <a href="/links/" class="text-no-decoration hide show-on-large">links</a>
-                <a href="/credit/" class="text-no-decoration hide show-on-large">credit</a>
+                <a href="/projects/" class="text-no-decoration hide show-on-large">projects</a>
             </div>
             <div class="flex">
                 <a href="{{ onion_site_url }}" class="text-no-decoration">onion</a>

@@ -1,6 +1,0 @@
-psutil
-nercone-modern
-fastapi
-jinja2
-uvicorn[standard]
-beautifulsoup4
