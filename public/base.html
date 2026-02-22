@@ -338,8 +338,8 @@
                 <p class="hide show-on-medium">{% block header_desc %}{{ get_daily_quote() }}{% endblock %}</p>
             </div>
             <div class="flex">
-                <a href="/access-counter/" class="text-no-decoration text-highlight"><p class="hide show-on-large">Access</p> #{{ get_access_count() }}</a>
-                <a href="/server-version/" class="text-no-decoration text-highlight"><p class="hide show-on-large">Version</p> {{ server_version }}</a>
+                <a href="/access-counter/" class="text-no-decoration text-highlight">#{{ get_access_count() }}</a>
+                <a href="/server-version/" class="text-no-decoration text-highlight">{{ server_version }}</a>
             </div>
         </header>
         <main>{% block content %}{% endblock %}        </main>
