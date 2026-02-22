@@ -3,13 +3,13 @@ import random
 import psutil
 import subprocess
 from pathlib import Path
+from http import HTTPStatus
 from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
 from fastapi import FastAPI, Request, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, RedirectResponse, JSONResponse
 from jinja2.exceptions import TemplateNotFound
-from .error import error_page
 from .database import AccessCounter
 from .middleware import Middleware, onion_hostname
 
@@ -31,6 +31,10 @@ def get_daily_quote() -> str:
         quotes = f.read().strip().split("\n")
     return random.Random(seed).choice(quotes)
 templates.env.globals["get_daily_quote"] = get_daily_quote
+
+def error_page(templates: Jinja2Templates, request: Request, status_code: int, message: str | None = None) -> Response:
+    status_code_name = HTTPStatus(status_code).phrase
+    return templates.TemplateResponse(status_code=status_code, request=request, name="error.html", context={"status_code": status_code, "status_code_name": status_code_name, "message": message})
 
 @app.api_route("/api/v1/status", methods=["GET"])
 async def v1_status(request: Request):
