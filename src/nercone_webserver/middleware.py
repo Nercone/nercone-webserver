@@ -1,7 +1,9 @@
+import subprocess
 from fastapi import Response
 from fastapi.responses import PlainTextResponse
-from starlette.types import ASGIApp, Receive, Scope, Send
+from starlette.types import Scope, ASGIApp, Receive, Send
 
+server_version = subprocess.run(["/usr/bin/git", "rev-parse", "--short", "HEAD"], text=True, capture_output=True).stdout.strip()
 onion_hostname = "4sbb7xhdn4meuesnqvcreewk6sjnvchrsx4lpnxmnjhz2soat74finid.onion"
 hostnames = ["localhost", "nercone.dev", "d-g-c.net", "diamondgotcat.net", onion_hostname]
 
@@ -86,7 +88,7 @@ class Middleware:
         return body
 
     async def _send_with_headers(self, response: Response, scope, receive, send):
-        response.headers["Server"] = "nercone"
+        response.headers["Server"] = f"nercone.dev ({server_version})"
         response.headers["Onion-Location"] = f"http://{onion_hostname}/"
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Methods"] = "*"

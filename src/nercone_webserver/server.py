@@ -1,9 +1,6 @@
 import json
 import random
-import psutil
-import subprocess
 from pathlib import Path
-from http import HTTPStatus
 from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
 from fastapi import FastAPI, Request, Response
@@ -12,15 +9,15 @@ from fastapi.responses import PlainTextResponse, JSONResponse, FileResponse, Red
 from jinja2.exceptions import TemplateNotFound
 from .error import error_page
 from .database import AccessCounter
-from .middleware import Middleware, onion_hostname
+from .middleware import Middleware, server_version, onion_hostname
 
 app = FastAPI()
 app.add_middleware(Middleware)
 templates = Jinja2Templates(directory=Path.cwd().joinpath("public"))
 accesscounter = AccessCounter()
 templates.env.globals["get_access_count"] = accesscounter.get
+templates.env.globals["server_version"] = server_version
 templates.env.globals["onion_site_url"] = f"http://{onion_hostname}/"
-templates.env.globals["server_version"] = subprocess.run(["/usr/bin/git", "rev-parse", "--short", "HEAD"], text=True, capture_output=True).stdout.strip()
 
 def get_current_year() -> str:
     return str(datetime.now(ZoneInfo("Asia/Tokyo")).year)
@@ -39,39 +36,12 @@ async def ping(request: Request):
 
 @app.api_route("/status", methods=["GET"])
 async def status(request: Request):
-    virtual_memory = psutil.virtual_memory()
-    swap_memory = psutil.swap_memory()
-    disk_usage = psutil.disk_usage("/")
     return JSONResponse(
         {
             "status": "ok",
-            "access": accesscounter.get(),
-            "phrase": get_daily_quote(),
-            "resouces": {
-                "cpu": {
-                    "count": psutil.cpu_count(),
-                    "percent": psutil.cpu_percent(interval=1)
-                },
-                "memory": {
-                    "virtual": {
-                        "total": virtual_memory.total,
-                        "used": virtual_memory.used,
-                        "available": virtual_memory.available,
-                        "percent": virtual_memory.percent
-                    },
-                    "swap": {
-                        "total": swap_memory.total,
-                        "used": swap_memory.used,
-                        "available": swap_memory.total - swap_memory.used,
-                        "percent": swap_memory.percent
-                    }
-                },
-                "storage": {
-                    "total": disk_usage.total,
-                    "used": disk_usage.used,
-                    "available": disk_usage.free
-                }
-            }
+            "version": server_version,
+            "daily_quote": get_daily_quote(),
+            "access_count": accesscounter.get()
         },
         status_code=200
     )
