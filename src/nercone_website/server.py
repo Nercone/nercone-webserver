@@ -225,7 +225,7 @@ async def default_response(request: Request, full_path: str) -> Response:
                 accesscounter.increase()
                 return response
         except PermissionError:
-            continue
+            return error_page(templates, request, 403, "何をしてるんです？脆弱性報告のためならいいのですが、データ盗んで悪用するためなら今すぐにやめてくださいね？", "ディレクトリトラバーサルね、知ってる。公開してないところ覗きたいの？えっt")
 
     try: 
         path = Path.cwd().joinpath("public", "shorturls.json")
