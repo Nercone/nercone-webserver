@@ -13,7 +13,7 @@ description: Nerconeについて
 名前からもわかると思いますが圧倒的猫派です。理由？可愛いからに決まってるじゃないですか。
 
 ### ニックネーム
-nercone、nerc1 (leet表記)、nenaicone (サブ垢)、diamondgotcat (古いやつ)
+nercone、nerc1 (leet表記?<!-- ちょっと違う気もするけどいい呼び方がわからない -->)、nenaicone (サブ垢)、diamondgotcat (古いやつ)
 
 ### 今の目標
 <!-- てとらさんと結婚することと、-->カーネルレベルからOSを作ることと、Linuxディストリビューションを作ることと、会社建てるかAppleに入ること。

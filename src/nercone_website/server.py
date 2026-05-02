@@ -93,7 +93,7 @@ async def status(request: Request):
     )
 
 @app.api_route("/welcome", methods=["GET"])
-async def ping(request: Request):
+async def welcome(request: Request):
     return PlainTextResponse(
         f"""
 ■   ■ ■■■■■ ■■■■   ■■■■  ■■■  ■   ■ ■■■■■
@@ -227,7 +227,7 @@ async def default_response(request: Request, full_path: str) -> Response:
         except PermissionError:
             return error_page(templates, request, 403, "何をしてるんです？脆弱性報告のためならいいのですが、データ盗んで悪用するためなら今すぐにやめてくださいね？", "ディレクトリトラバーサルね、知ってる。公開してないところ覗きたいの？えっt")
 
-    try: 
+    try:
         path = Path.cwd().joinpath("public", "shorturls.json")
         if not path.exists():
             return error_page(templates, request, 500, "短縮URLの処理のためのJSONファイルがありません。", "設定ファイルぐらい用意しておけよ！")
