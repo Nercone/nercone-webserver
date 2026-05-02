@@ -32,9 +32,9 @@
                 --color-white: #FFFFFF;
 
                 --color-dark-grey: #1A1A1A;
-                --color-dark-grey-alt: #272727;
+                --color-bright-dark-grey: #272727;
                 --color-light-grey: #E0E0E0;
-                --color-light-grey-alt: #939393;
+                --color-dark-light-grey: #939393;
 
                 --color-red: #A03333;
                 --color-green: #00A050;
@@ -88,7 +88,7 @@
             .node-body {
                 width: 192px;
                 height: 192px;
-                background-color: var(--color-dark-grey-alt);
+                background-color: var(--color-bright-dark-grey);
                 border-radius: 32px 32px 0 0;
                 display: flex;
                 flex-direction: column;
@@ -126,13 +126,13 @@
                 justify-content: center;
                 font-size: 16px;
                 color: var(--color-white);
-                background-color: var(--color-light-grey-alt);
+                background-color: var(--color-dark-light-grey);
                 transition: background-color 0.3s ease;
             }
 
             .node-status.status-normal  { background-color: var(--color-green); }
             .node-status.status-error   { background-color: var(--color-red); }
-            .node-status.status-unknown { background-color: var(--color-light-grey-alt); }
+            .node-status.status-unknown { background-color: var(--color-dark-light-grey); }
 
             .connector {
                 flex: 1;
@@ -154,7 +154,7 @@
                 background-image: none;
             }
             .connector.line-solid-grey {
-                background-color: var(--color-light-grey-alt);
+                background-color: var(--color-dark-light-grey);
                 background-image: none;
             }
             .connector.line-dashed-green {
@@ -172,7 +172,7 @@
             .connector.line-dashed-grey {
                 background-color: transparent;
                 background-image: repeating-linear-gradient(to right,
-                    var(--color-light-grey-alt) 0, var(--color-light-grey-alt) 16px,
+                    var(--color-dark-light-grey) 0, var(--color-dark-light-grey) 16px,
                     transparent 16px, transparent 32px);
             }
 
@@ -188,7 +188,7 @@
             }
             .error-message {
                 font-size: 20px;
-                color: var(--color-light-grey-alt);
+                color: var(--color-dark-light-grey);
                 margin: 0;
                 font-weight: 400;
                 line-height: 1.4;
@@ -226,7 +226,7 @@
                 }
                 .connector.line-dashed-red    { color: var(--color-red); }
                 .connector.line-dashed-green  { color: var(--color-green); }
-                .connector.line-dashed-grey   { color: var(--color-light-grey-alt); }
+                .connector.line-dashed-grey   { color: var(--color-dark-light-grey); }
             }
 
             @media (max-width: 540px) {

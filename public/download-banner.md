@@ -15,4 +15,4 @@ description: Nerconeのバナー画像をダウンロード
 <a href="https://nercone.dev/"><img src="https://assets.nercone.dev/images/banner.webp"></a> <!-- WEBP -->
 ```
 
-<span class="text-light-grey-alt">バナー画像は[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.ja)の元で自由に使用できます。</span>
+<span class="text-bright-light-grey">バナー画像は[CC BY 4.0](https://creativecommons.org/licenses/by/4.0/deed.ja)の元で自由に使用できます。</span>
