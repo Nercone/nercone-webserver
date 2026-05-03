@@ -244,7 +244,19 @@
             const first = val.trim().split(' ')[0];
             return first.endsWith('%') ? parseFloat(first) / 100 * wRef : (parseFloat(first) || 0);
         }
+        function resolveRadiusSource(el, wRef) {
+            const PROPS = [
+                'borderTopLeftRadius', 'borderTopRightRadius',
+                'borderBottomRightRadius', 'borderBottomLeftRadius',
+            ];
+            for (const target of [el, ...el.children]) {
+                const cs = getComputedStyle(target);
+                if (PROPS.some(p => parseRadius(cs[p], wRef) > 0)) return cs;
+            }
+            return getComputedStyle(el);
+        }
         const w = rect.width;
+        const cs = resolveRadiusSource(el, w);
         cursor.style.borderRadius = [
             cs.borderTopLeftRadius,
             cs.borderTopRightRadius,
