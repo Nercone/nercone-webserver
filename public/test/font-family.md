@@ -3,7 +3,10 @@ title: Font Family Test Page - Nercone
 description: 使用しているフォントの表示テスト用ページです。
 ---
 
-# Inter
+# フォントファミリーのテスト
+使用しているフォントの表示テスト用ページです。
+
+## Inter
 
 <pre class="font-inter">
 ABCDEFGHIJKLM
@@ -11,7 +14,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# BIZ UDGothic
+## BIZ UDGothic
 
 <pre class="font-inter">
 あのイーハトーヴォのすきとおった風、
@@ -24,7 +27,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# Noto Sans JP
+## Noto Sans JP
 
 <pre class="font-nsajp">
 あのイーハトーヴォのすきとおった風、
@@ -37,7 +40,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# Noto Sans TC
+## Noto Sans TC
 
 <pre class="font-nsatc">
 視野無窮廣，窗外有藍天，
@@ -47,7 +50,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# Noto Sans SC
+## Noto Sans SC
 
 <pre class="font-nsasc">
 视野无穷广，窗外有蓝天，
@@ -57,7 +60,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# Noto Sans KR
+## Noto Sans KR
 
 <pre class="font-nsakr">
 키스의 고유조건은 입술끼리 만나야 하고 특별한 기술은 필요치 않다.
@@ -67,7 +70,7 @@ abcdefghijklm
 1234567890
 </pre>
 
-# MesloLGS Nerd Font
+## MesloLGS Nerd Font
 
 <pre class="font-meslo">
 ABCDEFGHIJKLM
