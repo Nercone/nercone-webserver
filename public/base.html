@@ -62,7 +62,7 @@
         {% block custom_header %}
         <header class="flex">
             <div class="flex-1 flex">
-                <a href="/" class="text-no-decoration text-white" style="gap: 8px;">{% block title_prefix %}{% endblock %} <span class="font-bold">Nercone</span> {% block title_suffix %}{% endblock %}</a>
+                <a href="/" class="text-no-decoration text-white" style="gap: 8px;" translate="no">{% block title_prefix %}{% endblock %} <span class="font-bold">Nercone</span> {% block title_suffix %}{% endblock %}</a>
                 <p class="hide show-on-medium show-on-large">{% block header_desc %}<a href="/daily-quote/" class="text-no-decoration">{{ get_daily_quote() }}</a>{% endblock %}</p>
             </div>
             <div class="flex">
@@ -74,7 +74,7 @@
         {% block custom_footer %}
         <footer class="flex text-bright-light-grey">
             <div class="flex-1 flex">
-                <a href="/" class="text-no-decoration hide show-on-medium show-on-large font-bold">{% block footer_domain_prefix %}{% endblock %}nercone.dev{% block footer_domain_suffix %}{% endblock %}</a>
+                <a href="/" class="text-no-decoration hide show-on-medium show-on-large font-bold" translate="no">{% block footer_domain_prefix %}{% endblock %}nercone.dev{% block footer_domain_suffix %}{% endblock %}</a>
                 {% block footer_links %}
                 <a href="/about/" class="text-no-decoration bold-on-small">about</a>
                 <a href="/links/" class="text-no-decoration bold-on-small">links</a>
@@ -93,7 +93,7 @@
                 <a href="https://nercone.dev/qiita/"><img alt="qiita" src="/assets/images/icons/qiita.svg" class="small-icon">
                 <a href="https://nercone.dev/zenn/"><img alt="zenn" src="/assets/images/icons/zenn.svg" class="small-icon">
                 <!--                         qiita            kotonai -->
-                <a href="/server-version/" class="font-bold text-no-decoration hide show-on-medium show-on-large">{{ server_version }}</a>
+                <a href="/server-version/" class="font-bold text-no-decoration hide show-on-medium show-on-large" translate="no">{{ server_version }}</a>
             </div>
         </footer>
         {% endblock %}
