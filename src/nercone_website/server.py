@@ -149,7 +149,6 @@ async def default_response(request: Request, full_path: str) -> Response:
         except PermissionError:
             return error_page(templates, request, 403, "何をしてるんです？脆弱性報告のためならいいのですが、データ盗んで悪用するためなら今すぐにやめてくださいね？", "ディレクトリトラバーサルね、知ってる。公開してないところ覗きたいの？えっt")
 
-    original_path = full_path
     markdown_mode = False
     markdown_ua = ["curl", "claude-user", "chatgpt-user", "google-extended", "perplexity-user"]
 
@@ -157,49 +156,46 @@ async def default_response(request: Request, full_path: str) -> Response:
         markdown_mode = True
     elif any([ua in request.headers.get("user-agent", "").lower() for ua in markdown_ua]):
         markdown_mode = True
-
-    if full_path.endswith(".md"):
+    elif full_path.endswith(".md"):
         markdown_mode = True
-        full_path = full_path[:-3] + ".html"
 
     if full_path in ["", "/"]:
         template_candidates = ["index.html"]
+        markdown_candidates = ["index.md"]
     elif full_path.endswith(".html"):
         template_candidates = [full_path.lstrip('/')]
+        markdown_candidates = [full_path[:-5].lstrip('/') + '.md']
+    elif full_path.endswith(".md"):
+        template_candidates = [full_path[:-3].lstrip('/') + '.html']
+        markdown_candidates = [full_path.lstrip('/')]
     else:
         template_candidates = [f"{full_path.strip('/')}.html", f"{full_path.strip('/')}/index.html"]
+        markdown_candidates = [f"{full_path.strip('/')}.md", f"{full_path.strip('/')}/index.md", f"{full_path.strip('/')}/README.md"]
 
-    for name in template_candidates:
-        try:
-            if markdown_mode:
-                content = templates.env.get_template(name).render(request=request)
-                soup = BeautifulSoup(content, "html.parser")
-                main = str(soup.find("main")) if soup.find("main") else content
-                markdown = markitdown.convert_stream(io.BytesIO(main.encode("utf-8")), file_extension=".html")
-                response = PlainTextResponse(markdown.text_content, status_code=200, media_type="text/markdown")
-            else:
-                response = templates.TemplateResponse(status_code=200, request=request, name=name)
+    def try_html_templates():
+        for name in template_candidates:
+            try:
+                if markdown_mode:
+                    content = templates.env.get_template(name).render(request=request)
+                    soup = BeautifulSoup(content, "html.parser")
+                    main = str(soup.find("main")) if soup.find("main") else content
+                    markdown = markitdown.convert_stream(io.BytesIO(main.encode("utf-8")), file_extension=".html")
+                    return PlainTextResponse(markdown.text_content, status_code=200, media_type="text/markdown")
+                else:
+                    return templates.TemplateResponse(status_code=200, request=request, name=name)
+            except TemplateNotFound:
+                continue
+        return None
 
-            accesscounter.increase()
-            return response
-        except TemplateNotFound:
-            continue
-
-    if original_path in ["", "/"]:
-        markdown_candidates = ["index.md"]
-    elif original_path.endswith(".md"):
-        markdown_candidates = [original_path.lstrip('/')]
-    else:
-        markdown_candidates = [f"{original_path.strip('/')}.md", f"{original_path.strip('/')}/index.md", f"{original_path.strip('/')}/README.md"]
-
-    for name in markdown_candidates:
-        try:
-            if markdown_path := resolve_static_file(name):
+    def try_md_files():
+        for name in markdown_candidates:
+            try:
+                if not (markdown_path := resolve_static_file(name)):
+                    continue
                 with markdown_path.open("r") as f:
                     markdown = f.read()
-
                 if markdown_mode:
-                    response = PlainTextResponse(markdown, status_code=200, media_type="text/markdown")
+                    return PlainTextResponse(markdown, status_code=200, media_type="text/markdown")
                 else:
                     if not markdown.startswith("---"):
                         front = {}
@@ -220,12 +216,15 @@ async def default_response(request: Request, full_path: str) -> Response:
                     source += f"{{% block content %}}\n{html}\n{{% endblock %}}\n"
 
                     content = templates.env.from_string(source).render(request=request)
-                    response = Response(content=content, status_code=200, media_type="text/html")
+                    return Response(content=content, status_code=200, media_type="text/html")
+            except PermissionError:
+                return error_page(templates, request, 403, "何をしてるんです？脆弱性報告のためならいいのですが、データ盗んで悪用するためなら今すぐにやめてくださいね？", "ディレクトリトラバーサルね、知ってる。公開してないところ覗きたいの？えっt")
+        return None
 
-                accesscounter.increase()
-                return response
-        except PermissionError:
-            return error_page(templates, request, 403, "何をしてるんです？脆弱性報告のためならいいのですが、データ盗んで悪用するためなら今すぐにやめてくださいね？", "ディレクトリトラバーサルね、知ってる。公開してないところ覗きたいの？えっt")
+    for try_fn in ([try_md_files, try_html_templates] if markdown_mode else [try_html_templates, try_md_files]):
+        if response := try_fn():
+            accesscounter.increase()
+            return response
 
     try:
         path = Path.cwd().joinpath("public", "shorturls.json")
