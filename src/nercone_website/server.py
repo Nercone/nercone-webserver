@@ -161,7 +161,7 @@ async def default_response(request: Request, full_path: str) -> Response:
 
     if full_path in ["", "/"]:
         template_candidates = ["index.html", "README.html"]
-        markdown_candidates = ["index.md", "README.md"]
+        markdown_candidates = ["index.md",   "README.md"]
     elif full_path.endswith(".html"):
         template_candidates = [f"{full_path[:-5].strip('/')}.html"]
         markdown_candidates = [f"{full_path[:-5].strip('/')}.md"]
