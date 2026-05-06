@@ -1,6 +1,7 @@
 ---
 title: Nercone's Color Palette
-title_suffix: Color Palette
+title_suffix: 's Color Palette
+title_suffix_separator: ""
 header_desc: ただのカラーパレット
 description: Nerconeが制作したカラーパレット
 ---
