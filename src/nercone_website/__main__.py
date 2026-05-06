@@ -1,5 +1,5 @@
 import uvicorn
-from .server import app
+from .config import Files, Directories
 
 def main():
     log_config = {
@@ -14,7 +14,7 @@ def main():
         "handlers": {
             "file": {
                 "class": "logging.FileHandler",
-                "filename": "logs/uvicorn.log",
+                "filename": str(Files.Logs.uvicorn.relative_to(Directories.base)),
                 "formatter": "default"
             },
             "console": {

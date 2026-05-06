@@ -4,9 +4,10 @@ from pathlib import Path
 VERSION = subprocess.run(["/usr/bin/git", "rev-parse", "HEAD"], text=True, capture_output=True).stdout.strip()
 
 class Hostnames:
-    normal = ["localhost", "nercone.dev", "nerc1.dev", "diamondgotcat.net", "d-g-c.net"]
+    local = ["localhost", "127.0.0.1"]
+    normal = ["nercone.dev", "nerc1.dev", "diamondgotcat.net", "d-g-c.net"]
     onion = "4sbb7xhdn4meuesnqvcreewk6sjnvchrsx4lpnxmnjhz2soat74finid.onion"
-    all = normal + [onion]
+    all = local + normal + [onion]
 
 class Directories:
     base = Path.cwd()
