@@ -17,7 +17,7 @@ from fastapi.templating import Jinja2Templates
 from fastapi.responses import PlainTextResponse, JSONResponse, FileResponse, RedirectResponse
 from jinja2.exceptions import TemplateNotFound
 from .error import error_page
-from .config import VERSION, Hostnames, Directories, Files
+from .config import Directories, Files, Repositories, Hostnames
 from .database import AccessCounter
 from .middleware import Middleware
 
@@ -27,7 +27,8 @@ templates = Jinja2Templates(directory=Directories.public)
 markitdown = MarkItDown()
 accesscounter = AccessCounter()
 templates.env.globals["get_access_count"] = accesscounter.get
-templates.env.globals["server_version"] = VERSION
+templates.env.globals["server_version"] = Repositories.Server.version
+templates.env.globals["contents_version"] = Repositories.Contents.version
 templates.env.globals["onion_site_url"] = f"http://{Hostnames.onion}/"
 templates.env.filters["re_sub"] = lambda s, pattern, repl: re.sub(pattern, repl, s)
 
@@ -89,7 +90,7 @@ async def status(request: Request):
     return JSONResponse(
         {
             "status": "ok",
-            "version": VERSION[:7],
+            "version": {"server": Repositories.Server.version, "content": Repositories.Contents.version},
             "daily_quote": get_daily_quote(),
             "access_count": accesscounter.get()
         },
@@ -108,7 +109,7 @@ async def welcome(request: Request):
 ■  ■■ ■     ■  ■  ■     ■   ■ ■  ■■ ■
 ■   ■ ■■■■■ ■   ■  ■■■■  ■■■  ■   ■ ■■■■■
 
-nercone.dev ({VERSION[:7]})
+nercone.dev ({Repositories.Server.version}+{Repositories.Contents.version})
 welcome to nercone.dev!
         """.strip() + "\n",
         status_code=200

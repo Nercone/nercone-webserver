@@ -6,7 +6,7 @@ from fastapi import Response
 from fastapi.responses import PlainTextResponse
 from starlette.types import Scope, ASGIApp, Receive, Send
 from .logger import log_access, finalize_log
-from .config import VERSION, Hostnames, AccessSources
+from .config import Repositories, Hostnames, AccessSources
 
 class Middleware:
     def __init__(self, app: ASGIApp):
@@ -117,7 +117,7 @@ class Middleware:
     async def _send(self, response: Response, scope, receive, send, timings: dict, request_start: float):
         content_type = response.headers.get("content-type", "")
 
-        response.headers["Server"] = f"nercone.dev ({VERSION[:7]})"
+        response.headers["Server"] = f"nercone.dev ({Repositories.Server.version})"
         response.headers["Onion-Location"] = f"http://{Hostnames.onion}/"
         response.headers["Link"] = "<https://nercone.dev/sitemap.xml>; rel=\"sitemap\", <https://nercone.dev/robots.txt>; rel=\"robots\""
 

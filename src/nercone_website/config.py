@@ -2,14 +2,6 @@ import ipaddress
 import subprocess
 from pathlib import Path
 
-VERSION = subprocess.run(["/usr/bin/git", "rev-parse", "HEAD"], text=True, capture_output=True).stdout.strip()
-
-class Hostnames:
-    local = ["localhost", "127.0.0.1"]
-    normal = ["nercone.dev", "nerc1.dev", "diamondgotcat.net", "d-g-c.net"]
-    onion = "4sbb7xhdn4meuesnqvcreewk6sjnvchrsx4lpnxmnjhz2soat74finid.onion"
-    all = local + normal + [onion]
-
 class Directories:
     base = Path.cwd()
     public = base.joinpath("public")
@@ -26,6 +18,21 @@ class Files:
 
     class Databases:
         access_counter = Directories.databases.joinpath("access_counter.db")
+
+class Repositories:
+    class Server:
+        url = subprocess.run(["/usr/bin/git", "remote", "get-url", "origin"], text=True, capture_output=True, cwd=Directories.base).stdout.strip()
+        version = subprocess.run(["/usr/bin/git", "rev-parse", "--short", "HEAD"], text=True, capture_output=True, cwd=Directories.base).stdout.strip()
+
+    class Contents:
+        url = subprocess.run(["/usr/bin/git", "remote", "get-url", "origin"], text=True, capture_output=True, cwd=Directories.public).stdout.strip()
+        version = subprocess.run(["/usr/bin/git", "rev-parse", "--short", "HEAD"], text=True, capture_output=True, cwd=Directories.public).stdout.strip()
+
+class Hostnames:
+    local = ["localhost", "127.0.0.1"]
+    normal = ["nercone.dev", "nerc1.dev", "diamondgotcat.net", "d-g-c.net"]
+    onion = "4sbb7xhdn4meuesnqvcreewk6sjnvchrsx4lpnxmnjhz2soat74finid.onion"
+    all = local + normal + [onion]
 
 class AccessSources:
     trusted = [
