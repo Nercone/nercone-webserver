@@ -42,7 +42,7 @@ def this_year() -> int:
 templates.env.globals["this_year"] = this_year
 
 def this_year_in_heisei() -> int: # heysay is not ended.
-    return datetime.now(ZoneInfo("Asia/Tokyo")).year - 1989
+    return datetime.now(ZoneInfo("Asia/Tokyo")).year - 1988
 templates.env.globals["this_year_in_heisei"] = this_year_in_heisei
 
 def get_daily_quote() -> str:
