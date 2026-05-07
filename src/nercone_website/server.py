@@ -37,12 +37,10 @@ class CustomHTMLRenderer(mistune.HTMLRenderer):
         return f'<pre>{mistune.escape(code)}</pre>\n'
 htmlitdown = mistune.create_markdown(renderer=CustomHTMLRenderer(escape=False), plugins=["table"])
 
-@property
 def this_year() -> int:
     return datetime.now(ZoneInfo("Asia/Tokyo")).year
 templates.env.globals["this_year"] = this_year
 
-@property
 def this_year_in_heisei() -> int: # heysay is not ended.
     return datetime.now(ZoneInfo("Asia/Tokyo")).year - 1989
 templates.env.globals["this_year_in_heisei"] = this_year_in_heisei
