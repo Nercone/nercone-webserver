@@ -5,6 +5,7 @@ import yaml
 import random
 import mistune
 import resvg_py
+import requests
 from html import escape
 from pathlib import Path
 from bs4 import BeautifulSoup
@@ -113,6 +114,20 @@ welcome to nercone.dev!
 @app.api_route("/error/{code}", methods=["GET", "POST", "HEAD"])
 async def fake_error_page(request: Request, code: str):
     return error_page(templates=templates, request=request, status_code=int(code))
+
+google_fonts_css_cache: dict = {"content": None, "expires_at": 0}
+@app.api_route("/assets/css/google-fonts.css", methods=["GET"])
+async def google_fonts_css(request: Request):
+    now = datetime.now(timezone.utc).timestamp()
+    if google_fonts_css_cache["content"] and now < google_fonts_css_cache["expires_at"]:
+        return PlainTextResponse(google_fonts_css_cache["content"], status_code=200, media_type="text/css")
+
+    css = requests.get("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=BIZ+UDGothic&family=Noto+Sans+JP:wght@100..900&family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+TC:wght@100..900&family=Noto+Sans+KR:wght@100..900&display=swap")
+    if css.status_code == 200:
+        google_fonts_css_cache["content"] = css.text
+        google_fonts_css_cache["expires_at"] = now + 86400
+
+    return PlainTextResponse(css.text or "Failed to retrieve the Google Fonts CSS file.", status_code=200 if css.status_code == 200 else 500, media_type="text/css")
 
 @app.api_route("/assets/images/thumbnails/{path:path}", methods=["GET"])
 async def thumbnail(request: Request, path: str) -> Response:
