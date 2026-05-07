@@ -226,7 +226,8 @@ async def default_response(request: Request, full_path: str) -> Response:
                             front = yaml.safe_load(markdown[3:end]) or {}
                             body = markdown[end+4:].lstrip("\n")
 
-                    html = htmlitdown(body)
+                    body_rendered = templates.env.from_string(body).render(request=request)
+                    html = htmlitdown(body_rendered)
                     source = f"{{% extends \"/base.html\" %}}\n"
                     for block in front:
                         source += f"{{% block {block} %}}{front[block]}{{% endblock %}}\n"
