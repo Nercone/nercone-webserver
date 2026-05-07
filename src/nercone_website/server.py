@@ -47,10 +47,13 @@ def this_year_in_heisei() -> int: # heysay is not ended.
 templates.env.globals["this_year_in_heisei"] = this_year_in_heisei
 
 def get_daily_quote() -> str:
-    seed = str(datetime.now(timezone.utc).date())
-    with Files.quotes.open("r") as f:
-        quotes = f.read().strip().split("\n")
-    return random.Random(seed).choice(quotes)
+    if Files.quotes.is_file():
+        seed = str(datetime.now(timezone.utc).date())
+        with Files.quotes.open("r") as f:
+            quotes = f.read().strip().split("\n")
+        return random.Random(seed).choice(quotes)
+    else:
+        return "GReeeeN KA-RA-DA"
 templates.env.globals["get_daily_quote"] = get_daily_quote
 
 def resolve_static_file(full_path: str) -> Path | None:
