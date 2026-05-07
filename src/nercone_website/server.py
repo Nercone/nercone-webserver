@@ -34,7 +34,7 @@ templates.env.filters["re_sub"] = lambda s, pattern, repl: re.sub(pattern, repl,
 class CustomHTMLRenderer(mistune.HTMLRenderer):
     def block_code(self, code, **attrs):
         return f'<pre>{mistune.escape(code)}</pre>\n'
-htmlitdown = mistune.create_markdown(renderer=CustomHTMLRenderer(escape=False))
+htmlitdown = mistune.create_markdown(renderer=CustomHTMLRenderer(escape=False), plugins=["table"])
 
 @property
 def this_year() -> int:
