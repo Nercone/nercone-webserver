@@ -241,14 +241,13 @@ async def default_response(request: Request, full_path: str) -> Response:
             accesscounter.increase()
             return response
 
-    try:
-        if not Files.shorturls.is_file():
-            return error_page(templates, request, 500, "短縮URLの処理のためのJSONファイルがありません。", "設定ファイルぐらい用意しておけよ！")
-        shorturls = json.load(Files.shorturls.open("r", encoding="utf-8"))
-    except Exception:
-        return error_page(templates, request, 500, "短縮URLの処理のためのJSONファイルを正常に読み込めませんでした。", "なにこの設定ファイル読めないじゃない！")
+    if Files.shorturls.is_file():
+        try:
+            shorturls = json.load(Files.shorturls.open("r", encoding="utf-8"))
+        except Exception:
+            return error_page(templates, request, 500, "短縮URLの処理のためのJSONファイルを正常に読み込めませんでした。", "なにこの設定ファイル読めないじゃない！")
 
-    if result := resolve_shorturl(shorturls, full_path):
-        return RedirectResponse(url=result)
+        if result := resolve_shorturl(shorturls, full_path):
+            return RedirectResponse(url=result)
 
     return error_page(templates, request, 404, "リクエストしたページは現在ご利用になれません。削除/移動されたか、URLが間違っている可能性があります。", "そんなページ知らないっ！")
