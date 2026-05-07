@@ -1,3 +1,4 @@
+import ipaddress
 import subprocess
 from pathlib import Path
 
@@ -25,3 +26,59 @@ class Files:
 
     class Databases:
         access_counter = Directories.databases.joinpath("access_counter.db")
+
+class AccessSources:
+    trusted = [
+        "10.0.0.0/8",
+        "172.16.0.0/12",
+        "192.168.0.0/16",
+        "127.0.0.0/8",
+        "169.254.0.0/16",
+
+        "::1/128",
+        "fc00::/7",
+        "fe80::/10",
+
+        "100.64.0.0/10"
+    ]
+
+    @staticmethod
+    def is_trusted(ip: str, forwarded_for: str = "") -> bool:
+        try:
+            addr = ipaddress.ip_address(ip)
+            networks = [ipaddress.ip_network(n) for n in AccessSources.trusted]
+            ip_is_trusted = any(addr in net for net in networks)
+        except ValueError:
+            return False
+
+        if not ip_is_trusted:
+            return False
+
+        if forwarded_for:
+            entries = [e.strip() for e in forwarded_for.split(",")]
+
+            proxy_idx = None
+            for i in range(len(entries) - 1, -1, -1):
+                try:
+                    if entries[i] and ipaddress.ip_address(entries[i]) == addr:
+                        proxy_idx = i
+                        break
+                except ValueError:
+                    continue
+
+            if proxy_idx is None:
+                return True
+
+            if proxy_idx == 0:
+                return True
+
+            effective_entry = entries[proxy_idx - 1]
+            if not effective_entry:
+                return True
+            try:
+                effective_addr = ipaddress.ip_address(effective_entry)
+                return any(effective_addr in net for net in networks)
+            except ValueError:
+                return False
+
+        return True

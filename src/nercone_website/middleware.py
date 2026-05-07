@@ -6,7 +6,7 @@ from fastapi import Response
 from fastapi.responses import PlainTextResponse
 from starlette.types import Scope, ASGIApp, Receive, Send
 from .logger import log_access, finalize_log
-from .config import VERSION, Hostnames
+from .config import VERSION, Hostnames, AccessSources
 
 class Middleware:
     def __init__(self, app: ASGIApp):
@@ -38,7 +38,11 @@ class Middleware:
         scope["log"] = log_access(scope)
         request_start = time.perf_counter()
 
-        if not any([hostname.endswith(candidate) for candidate in Hostnames.all]):
+        direct_ip = scope.get("client", ("", 0))[0]
+        xfwd = headers.get(b"x-forwarded-for", b"").decode()
+        trusted = AccessSources.is_trusted(direct_ip, xfwd)
+
+        if not trusted and not any([hostname.endswith(candidate) for candidate in Hostnames.all]):
             response = PlainTextResponse("許可されていないホスト名でのアクセスです。", status_code=400)
             await self._send(response, scope, receive, send, timings, request_start)
             finalize_log(scope["log"], response.status_code, request_start, timings)
